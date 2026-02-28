@@ -1,9 +1,9 @@
 import express from 'express'
 const router = express.Router()
 import {Getuser,ChangstatusUser,ChangroleUser,Addusercart,Getusercart,emtyremovecart,AdduserAddress,Saveuserorder,Getuserorder} from '../controllers/user'
-import {authCheck} from '../middenware/auth-admin-Chack'
+import {autocheck} from '../middenware/auth-admin-check'
 
-router.get('/users',authCheck,Getuser)
+router.get('/users',autocheck,Getuser)
 router.post('/userchangstatus', ChangstatusUser)
 router.post('/changroleuser', ChangroleUser)
 router.post('/addusercart', Addusercart)
