@@ -1,16 +1,53 @@
-import { Request } from "express"
-import { JwtPayload } from "jsonwebtoken"
+import { Request } from "express";
 
-export interface AuthUser {
+
+export interface Authcheck {
     id: number
     role: string
     email: string
-    
 }
 
-export interface AuthRequest extends Request{
-    user?: AuthUser
+export interface Authrequire extends Request {
+    user?: Authcheck
 }
-// export interface AuthRequest extends Request {
-//   user?: JwtPayload & { email: string }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// import { Request } from "express"
+
+// export interface AuthUser {
+//     id: number
+//     role: string
+//     email: string
+    
 // }
+
+// export interface AuthRequest extends Request{
+//     user?: AuthUser
+// }
+// // export interface AuthRequest extends Request {
+// //   user?: JwtPayload & { email: string }
+// // }
