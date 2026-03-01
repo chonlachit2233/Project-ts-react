@@ -41,8 +41,8 @@ model Product {
   quantity      Int
   createdAt     DateTime         @default(now())
   updatedAt     DateTime         @updatedAt
-  category      Category?        @relation(fields: [categoryId], references: [id], onDelete: Cascade)
-  categoryId    Int?
+  category      Category        @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  categoryId    Int
 }
 
 model Category {
@@ -61,8 +61,8 @@ model Image {
   secure_url String
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
-  product    Product? @relation(fields: [productId], references: [id], onDelete: Cascade)
-  productId  Int?
+  product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId  Int
 }
 
 model Order {
@@ -72,8 +72,8 @@ model Order {
   orderstatus String           @default("Not Process")
   createdAt   DateTime         @default(now())
   updatedAt   DateTime         @updatedAt
-  user        User?            @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId      Int?
+  user        User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      Int
 }
 
 model ProductOnOrder {
@@ -92,8 +92,8 @@ model Cart {
   products  ProductOnCart[]
   createdAt DateTime        @default(now())
   updatedAt DateTime        @updatedAt
-  user      User?           @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    Int?
+  user      User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    Int
 }
 
 model ProductOnCart {
@@ -102,6 +102,6 @@ model ProductOnCart {
   count     Int
   price     Float
   cart      Cart     @relation(fields: [cartId], references: [id], onDelete: Cascade)
-  product   Product? @relation(fields: [productId], references: [id], onDelete: Cascade)
-  productId Int?
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId Int
 }

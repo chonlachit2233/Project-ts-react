@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import prisma from "../config/prisma";
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
+import test from "node:test";
 
 export const UserRegister = async (req: Request, res: Response) => {
     try {
@@ -96,7 +97,18 @@ export const UserLogin = async (req: Request, res: Response) => {
 }
 export const CerrentUser = async (req: Request, res: Response) => {
     try {
-        res.send('Hello cerrentuser-admin')
+        const user = await prisma.user.findFirst({
+            where: {
+                email: req.user?.email!
+            },
+            select: {
+                id: true,
+                email: true,
+                name: true,
+                role: true
+            }
+        })
+        res.json({ user })
     } catch (err) {
         console.log(err)
         res.status(500).json({ message: 'Server error' })
