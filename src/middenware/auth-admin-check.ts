@@ -1,10 +1,10 @@
 
 import {Request,Response,NextFunction } from "express"
 import jwt from 'jsonwebtoken'
-import { Authrequire } from "../types/auth-request"
-import prisma from "../../config/prisma"
+// import { Authrequire } from "../types/auth-request"
+import prisma from "../config/prisma"
 
-export const Authcheck = async(req: Authrequire, res: Response, next: NextFunction) =>{
+export const Authcheck = async(req: Request, res: Response, next: NextFunction) =>{
     try {
         const headers = req.headers.authorization
         console.log('Authorization in success')
@@ -25,7 +25,7 @@ export const Authcheck = async(req: Authrequire, res: Response, next: NextFuncti
         email: string
        }
        req.user = decoded
-
+    
 
        const user = await prisma.user.findFirst({
         where:{
@@ -45,10 +45,10 @@ export const Authcheck = async(req: Authrequire, res: Response, next: NextFuncti
     }
 }
 
-export const Admincheck = async(req: Authrequire, res: Response, next: NextFunction) =>{
+export const Admincheck = async(req: Request, res: Response, next: NextFunction) =>{
     try{
         
-         const email = req.user?.email
+        const email = req.user?.email
          
          if(!email){
              return res.status(401).json({message:'Unauthrizad'})

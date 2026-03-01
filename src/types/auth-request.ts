@@ -1,4 +1,4 @@
-import { Request } from "express";
+// import { Request } from "express";
 
 
 export interface Authcheck {
@@ -7,9 +7,10 @@ export interface Authcheck {
     email: string
 }
 
-export interface Authrequire extends Request {
-    user?: Authcheck
-}
+// export interface Authrequire<T = any> extends Request {
+//     user?: Authcheck
+//     body: T
+// }
 
 
 

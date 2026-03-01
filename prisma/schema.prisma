@@ -99,7 +99,6 @@ model Cart {
 model ProductOnCart {
   id        Int      @id @default(autoincrement())
   cartId    Int
-  producId  Int
   count     Int
   price     Float
   cart      Cart     @relation(fields: [cartId], references: [id], onDelete: Cascade)
