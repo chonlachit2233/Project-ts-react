@@ -3,6 +3,12 @@ import prisma from "../config/prisma"
 import { v2 as cloudinary } from 'cloudinary';
 import { ImageType } from "../types/image";
 
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME!,
+    api_key: process.env.CLOUDINARY_API_KEY!,
+    api_secret: process.env.CLOUDINARY_API_SECRET!
+});
+
 export const Createproduct = async (req: Request, res: Response) => {
     try {
         const { title, description, price, quantity, categoryId, images } = req.body
@@ -125,7 +131,35 @@ export const Updateproduct = async (req: Request, res: Response) => {
 export const Removeproduct = async (req: Request, res: Response) => {
     try {
         const { id } = req.params
+        // step1 ค้นหาสินค้า
 
+        const product = await prisma.product.findFirst({
+            where: {
+                id: Number(id)
+            },
+            include: {
+                images: true
+            }
+        })
+        if (!product) {
+            return res.status(400).json({ message: 'Process not found.' })
+        }
+        console.log(product)
+
+        // step2 Promise ลบ แบบรอ
+
+        const deleteimage = product.images
+            .map((image) =>
+                new Promise((resolve, reject) => {
+                    //ลบจาก cloud
+                    cloudinary.uploader.destroy(image.public_id, (error, result) => {
+                        if (error) reject(error)
+                        else resolve(result)
+
+                    })
+                })
+            )
+        await Promise.all(deleteimage)
         const deleteproduct = await prisma.product.delete({
             where: {
                 id: Number(id)
@@ -252,16 +286,6 @@ export const Searchbyproduct = async (req: Request, res: Response) => {
         console.log(err)
     }
 }
-
-
-cloudinary.config({
-    cloud_name: process.env.CLOUDINARY_CLOUD_NAME!,
-    api_key: process.env.CLOUDINARY_API_KEY!,
-    api_secret: process.env.CLOUDINARY_API_SECRET!
-});
-
-
-
 export const createimage = async (req: Request, res: Response) => {
     try {
 
@@ -281,14 +305,14 @@ export const createimage = async (req: Request, res: Response) => {
 }
 export const removeimages = async (req: Request, res: Response) => {
     try {
-         
-       
-        const {public_id} = req.body
-         console.log(public_id)
-         cloudinary.uploader.destroy(public_id, (result: any)=>{
-           res.send('remove image success!!!')
-         })
-        
+
+
+        const { public_id } = req.body
+        console.log(public_id)
+        cloudinary.uploader.destroy(public_id, (result: any) => {
+            res.send('remove image success!!!')
+        })
+
 
     } catch (err) {
         console.log(err)
