@@ -266,22 +266,19 @@ export const Searchbyproduct = async (req: Request, res: Response) => {
 
         if (query) {
             console.log('query--->', query)
-            await Queryproduct(req, res, query)
+            return await Queryproduct(req, res, query)
         }
 
         if (price) {
             console.log('price--->', price)
-            await PriceProduct(req, res, price)
+           return await PriceProduct(req, res, price)
         }
 
         if (category) {
             console.log('category--->', category)
-            await Categoryproduct(req, res, category)
+           return await Categoryproduct(req, res, category)
         }
-        res.status(200).json({
-            message: 'Search product success'
-
-        })
+        res.status(200).json([])
     } catch (err) {
         console.log(err)
     }
