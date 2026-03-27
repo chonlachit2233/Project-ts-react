@@ -93,6 +93,28 @@ export const Addusercart = async (req: Request<{}, {}, AddtoCartBody>, res: Resp
             }
         })
 
+        //check quantity 
+        for (const itemp of cart) {
+            console.log(itemp)
+
+            const product = await prisma.product.findUnique({
+                where: {
+                    id: itemp.id
+                },
+                select: {
+                    quantity: true,
+                    title: true
+                }
+            })
+            console.log(product)
+
+            if (!product || itemp.count > product.quantity) {
+                return res.status(400).json({ ok: false, message: `ขออภัยสินค้า ${product?.title || 'product'}หมด` })
+            }
+
+        }
+
+
         const carts = await prisma.cart.deleteMany({
             where: {
                 userId: users.id
@@ -217,18 +239,7 @@ export const Saveuserorder = async (req: Request, res: Response) => {
         // console.log(req.body)
 
         // return res.send('Hello saveorder')
-
-
-
-
-
-
-
         const { id, amount, status, currency } = req.body
-
-       
-
-
         const amountTHB = Number(amount) / 100
         const usercart = await prisma.cart.findFirst({
             where: {
@@ -244,28 +255,6 @@ export const Saveuserorder = async (req: Request, res: Response) => {
             return res.status(400).json({ message: 'cart is emtry' })
 
         }
-
-
-
-        // for (const itemp of usercart.products) {
-        //     console.log(itemp)
-
-        //     const product = await prisma.product.findUnique({
-        //         where: {
-        //             id: itemp.productId
-        //         },
-        //         select: {
-        //             quantity: true,
-        //             title: true
-        //         }
-        //     })
-        //     console.log(product)
-
-        //     if (!product || itemp.count > product.quantity) {
-        //         return res.status(400).json({ ok: false, message: `ขออภัยสินค้า ${product?.title || 'product'}หมด` })
-        //     }
-
-        // }
 
         const order = await prisma.order.create({
             data: {
